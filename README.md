@@ -54,10 +54,10 @@ the program requires a file called RaaSCLI.yml in the working dir <br>
 ####
 <br>
 <br>
-The files contains the parameters to connect to the DR VPC you want to interact 
+The file contains the parameters to connect to the DR VPC you want to interact 
 with. <br>
 <br>
-The format of the file is as follows: <br>
+The format of the file MUST be as follows: <br>
 <br>
 :username: email@domain@OrgName<br>
 :password: password<br>
@@ -65,7 +65,7 @@ The format of the file is as follows: <br>
 <br>
 You can get those values from the vCloud Air portal pointing to the DR VPC. If 
 this file is not in the working directory<br>
-(or the values are not correct) the program will exit with error. <br>
+(or the values are not correct) the program will abort. <br>
 <br>
 <br>
 <b>Use cases: </b><br>
@@ -73,7 +73,7 @@ this file is not in the working directory<br>
 - interacting with the service via CLI manually<br>
 <br>
 - leveraging the CLI from some sort of higher level automation and orchestration 
-tools (e.g. vCO or SRM)<br>
+tools (e.g. vCO or SRM).<br>
 <br>
 More in general, the program is structured to have a &quot;RaaScore&quot; module that 
 wraps the most common DR REST APIs. <br>
@@ -83,7 +83,7 @@ constructs in RaaScore and manage the user interaction. RaaSCLI is nothing more
 than a CLI wrapper around RaaScore.<br>
 <br>
 The idea is that one could take RaaScore and build (e.g.) a Sinatra application 
-around it. <br>
+on top of it. <br>
 <br>
 <br>
 <b>Known limitations (ver 0.0.4):</b><br>
@@ -107,13 +107,15 @@ I have tested the program with Ruby 1.9.3. I haven't tested it with any other
 Ruby version. <br>
 <br>
 if you are using Ruby already and are familiar with it, getting the program 
-setup could be as easy as: <br>
+setup could be as easy as running: <br>
 <br>
 &quot;gem install RaaS&quot; <br>
 <br>
 If you are new to Ruby, I have tested these steps (http://tecadmin.net/install-ruby-1-9-3-or-multiple-ruby-verson-on-centos-6-3-using-rvm/)
 <br>
-against a CentOS 6.4 64 bit VM on vCloud Air and they worked just fine. At the 
+on a CentOS 6.4 64 bit VM on vCloud Air and they worked just fine. </p>
+<p>
+At the 
 end, you still need to install the CLI by running &quot;gem install RaaS&quot;.<br>
 <br>
 <br>
