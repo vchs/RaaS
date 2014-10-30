@@ -61,16 +61,16 @@ end
 
 def usage
   puts "\nUsage: #{$PROGRAM_NAME} operation [option1] [option2]\n"
-  puts "\n\toperations: peers|replications|testfailover|testcleanup|failover"
+  puts "\n\toperations: peers|replications|testfailover[or test]|testcleanup[or cleanuptest]|failover[or recovery]"
   puts "\n\te.g. #{$PROGRAM_NAME} peers"
   puts "\te.g. #{$PROGRAM_NAME} replications ALL"
   puts "\te.g. #{$PROGRAM_NAME} replications <VM name>"
-  puts "\te.g. #{$PROGRAM_NAME} testfailover <VM name>"
-  puts "\te.g. #{$PROGRAM_NAME} testfailover ALL"
-  puts "\te.g. #{$PROGRAM_NAME} testcleanup <VM name>"
-  puts "\te.g. #{$PROGRAM_NAME} testcleanup ALL"
-  puts "\te.g. #{$PROGRAM_NAME} failover <VM name>"
-  puts "\te.g. #{$PROGRAM_NAME} failover ALL"
+  puts "\te.g. #{$PROGRAM_NAME} testfailover [or test] <VM name>"
+  puts "\te.g. #{$PROGRAM_NAME} testfailover [or test] ALL"
+  puts "\te.g. #{$PROGRAM_NAME} testcleanup [or cleanuptest] <VM name>"
+  puts "\te.g. #{$PROGRAM_NAME} testcleanup [or cleanuptest] cleanuptest ALL"
+  puts "\te.g. #{$PROGRAM_NAME} failover [or recovery] <VM name>"
+  puts "\te.g. #{$PROGRAM_NAME} failover [or recovery] recovery ALL"
   puts "\n"
   
 end
@@ -78,9 +78,11 @@ end
 
 # These are the variables the program accept as inputs (see the usage section for more info)
 
-$operation = ARGV[0]
+if ARGV[0] 
+	$operation = ARGV[0].downcase
+end
+
 $details = ARGV[1]
-$VM = ARGV[2]
 
 # The if checks if the user called an operation. If not the case, we print the text on how to use the CLI  
 
@@ -158,7 +160,7 @@ if $operation
   # and print results or wants to testfailover one specific VM (in which case we call the testfailoverVM method)
   # and print results
     
-  when 'testfailover'
+  when 'testfailover', 'test'
   	#if the keyword name "ALL is specified we test failover ALL VMs 
     if $details == "ALL"
     	print "Are you REALLY SURE you want to test failover ALL the VMs? (yes/no): ".red
@@ -169,17 +171,17 @@ if $operation
 			puts 'Performing a test failover of all VMs. This may be a long task. Please wait.'.green
     		puts "\n" 
       		vmname, testfailover = raas.testfailoverALL
-      	end
-      	# Here we iterarte through the two arrays returned and print the VMs name and whether the testfailover was executed or not
-      	vmname.length.times do |i| 	  	    
+      	    # Here we iterarte through the two arrays returned and print the VMs name and whether the testfailover was executed or not
+      	    vmname.length.times do |i| 	  	    
         	if testfailover[i] == false
         	      puts "Sorry, the VM ".red + vmname[i] + " is not in the proper state to test a failover".red
        		      puts "\n"
        		else
        		      puts "Performing a test failover of VM ".green + vmname[i] + ". Please wait.".green
        		      puts "\n"
-       	end # if 
-        end #do 
+       	    end # if #testfailover == false
+            end #do 
+        end #if input == "yes"
     else
          if $details
          	   # if the details parameter is specified we assume it's a VM name and we run testfailoverVM
@@ -207,7 +209,7 @@ if $operation
   # and print results or wants to testcleanup one specific VM (in which case we call the testcleanupVM method)
   # and print results
   
-  when 'testcleanup'
+  when 'testcleanup', 'cleanuptest'
      #if the keyword name "ALL is specified we test cleanup ALL VMs 
     if $details == "ALL"
         print "Are you REALLY SURE you want to clean up ALL the VMs? (yes/no): ".red
@@ -218,17 +220,17 @@ if $operation
 			puts 'Performing a test cleanup of all VMs. This may be a long task. Please wait.'.green
     		puts "\n" 
     		vmname, testcleanup = raas.testcleanupALL
-    	end
-    	# Here we iterarte through the two arrays returned and print the VMs name and whether the testcleanup was executed or not
-      	vmname.length.times do |i| 	  	    
+    	    # Here we iterarte through the two arrays returned and print the VMs name and whether the testcleanup was executed or not
+      	    vmname.length.times do |i| 	  	    
         	if testcleanup[i] == false
         	      puts "Sorry, the VM ".red + vmname[i] + " is not in a test failover state that allows a clean up".red
        		      puts "\n"
        		else
        		      puts "Performing a testcleanup of VM ".green + vmname[i] + ". Please wait.".green
        		      puts "\n"
-       	 end #if
-       	 end #do
+       	    end #if testcleanup == false
+    	    end #do
+         end #if input == "yes"
     else
          if $details
                # if the details parameter is specified we assume it's a VM name and we run testcleanupVM
@@ -256,7 +258,7 @@ if $operation
   # and print results or wants to failover one specific VM (in which case we call the failoverVM method)
   # and print results
 
-  when 'failover'
+  when 'failover', 'recovery'
     #if the keyword name "ALL is specified we failover ALL VMs 
     if $details == "ALL"
     	print "Are you REALLY SURE you want to failover ALL the VMs for production usage? (yes/no): ".red
@@ -265,17 +267,17 @@ if $operation
 			puts 'Performing a failover of all VMs. This may be a long task. Please wait.'.green
     		puts "\n"
          	vmname, failover = raas.failoverALL
-      	end
-      	# Here we iterarte through the two arrays returned and print the VMs name and whether the failover was executed or not
-      	vmname.length.times do |i| 	 
+         	# Here we iterarte through the two arrays returned and print the VMs name and whether the failover was executed or not
+      	    vmname.length.times do |i| 	 
         	if failover[i] == false
         	      puts "Sorry, the VM ".red + vmname[i] + " is not in the proper state to failover".red
        		      puts "\n"
        		else
        		      puts "Performing a failover of VM ".green + vmname[i] + ". Please wait.".green
        		      puts "\n"
-       	 end # if 
-        end #do 
+       	    end # if failover == false
+            end #do 
+        end #if input == "yes"
     else
          if $details 
             # if the details parameter is specified we assume it's a VM name and we run failoverVM

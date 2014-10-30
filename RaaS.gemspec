@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'RaaS'
-  s.version     = '0.0.4'
+  s.version     = '0.0.5'
   s.executables << 'RaaSCLI'
   s.date        = '2014-10-27'
   s.summary     = "VMware vCloud Air RaaS program"
